@@ -9,13 +9,13 @@ package uy.ort.ob201802;
  *
  * @author sflaquer
  */
-public class implTadAbb<T> implements TadAbb<T> {
+public class NodoTadAbb<T> implements INodoTadAbb<T> {
     
     T dato;
-    TadAbb<T> izq;
-    TadAbb<T> der;
+    INodoTadAbb<T> izq;
+    INodoTadAbb<T> der;
     
-    public implTadAbb(T dato){
+    public NodoTadAbb(T dato){
         this.dato = dato;
     }
     
@@ -26,22 +26,22 @@ public class implTadAbb<T> implements TadAbb<T> {
     }
 
     @Override
-    public TadAbb<T> izq() {
+    public INodoTadAbb<T> izq() {
         return izq;
     }
 
     @Override
-    public TadAbb<T> der() {
+    public INodoTadAbb<T> der() {
         return der;
     }
 
     @Override
-    public void enlIzq(TadAbb<T> x) {
+    public void enlIzq(INodoTadAbb<T> x) {
         izq = x;
     }
 
     @Override
-    public void enlDer(TadAbb<T> x) {
+    public void enlDer(INodoTadAbb<T> x) {
         der = x;
     }
 

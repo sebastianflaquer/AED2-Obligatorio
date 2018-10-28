@@ -12,24 +12,24 @@ import java.util.regex.Pattern;
  *
  * @author sflaquer
  */
-public class ArbolAfiliados {
+public class ABBAfiliados {
     
-    private TadAbb<Afiliado> raiz;
+    private INodoTadAbb<Afiliado> raiz;
     
-    public TadAbb<Afiliado> getRaiz(){
+    public INodoTadAbb<Afiliado> getRaiz(){
         return raiz;
     }
     
     public void insertar(Afiliado a) {
         if (raiz == null) {
-            raiz = new implTadAbb<> (a);
+            raiz = new NodoTadAbb<> (a);
         } else {
             insertarRec(raiz, a);
         }
     }
 
     //INSERTAR
-    private void insertarRec(TadAbb<Afiliado> raiz, Afiliado a) {
+    private void insertarRec(INodoTadAbb<Afiliado> raiz, Afiliado a) {
         //1 - este mayor a este
         //0 - iguales
         //-1 - este mayor a este        
@@ -38,7 +38,7 @@ public class ArbolAfiliados {
         //if(a.getId() < raiz.obtener().getId()){
         if(a.getCI().compareTo(raiz.obtener().getCI()) < 0){
             if(raiz.izq()==null){
-                raiz.enlIzq(new implTadAbb<>(a));
+                raiz.enlIzq(new NodoTadAbb<>(a));
             }else{
                 insertarRec(raiz.izq(), a);
             }
@@ -46,40 +46,59 @@ public class ArbolAfiliados {
         //SI EL ID ES MAYOR
         else{
           if(raiz.der()==null){
-              raiz.enlDer(new implTadAbb<>(a));
+              raiz.enlDer(new NodoTadAbb<>(a));
           }else{
               insertarRec(raiz.der(), a);
           }
         }
     }
     
+    /////////////////////////////////////////////////////////////
     //BUSCAR
     String con ="";
-    public void mostrarTodo(TadAbb<Afiliado> r){
+    public void mostrarTodo(INodoTadAbb<Afiliado> r){
         if(r!=null){
             visitar(r);
             mostrarTodo(r.izq());
             mostrarTodo(r.der());
         }
     }
-    public void visitar(TadAbb<Afiliado> r) {
-        con+="Nombre: "+r.obtener().getNombre()+"Cedula:"+r.obtener().getCI()+"Mail:"+r.obtener().getEmail()+"\n";
+    public void visitar(INodoTadAbb<Afiliado> r) {
+        con+="Nombre: "+r.obtener().getNombre()+", Cedula:"+r.obtener().getCI()+", Mail:"+r.obtener().getEmail()+" \n";
     }
     
-    public String mostrar(TadAbb<Afiliado> r){
-        con=" ";
+    /////////////////////////////////////////////////////////////
+    //LISTAR ASCENDENTE
+    public String listarAscendente() {
+        String listado ="";
+        listado+= listarAscendenteRec(raiz, listado);
+        return listado;
+    }
+    private String listarAscendenteRec(INodoTadAbb<Afiliado> nodo, String listado) {
+        
+        if (nodo != null) {
+            listado = listarAscendenteRec(nodo.izq(), listado);
+            listado += nodo.obtener().getCI()+";"+ nodo.obtener().getNombre()+";"+ nodo.obtener().getEmail()+"| \n";
+            listado = listarAscendenteRec(nodo.der(), listado);
+        }
+        return listado;
+    }
+    
+    /////////////////////////////////////////////////////////////
+    //MOSTRAR
+    public String mostrar(INodoTadAbb<Afiliado> r){
+        con="";
         mostrarTodo(r);
         return con;
     }
     
     /////////////////////////////////////////////////////////////
     // VALIDA CEDULA
-    public boolean validarCedula(TadAbb<Afiliado> r){
+    public boolean validarCedula(INodoTadAbb<Afiliado> r){
         boolean retorno = false;
         retorno =  esCIValida(r.obtener().getCI());
         return retorno;
     }
-    
     public boolean esCIValida(String ci) { 
         String aux = ci.replaceAll("\\.", "");
         String aux2 = aux.replaceAll("-", "");
@@ -119,6 +138,8 @@ public class ArbolAfiliados {
         } 
     } 
     
+    /////////////////////////////////////////////////////////////
+    // VALIDA MAIL
     public boolean esMailValido(String email) {
         
         boolean retorno = false;
@@ -133,20 +154,21 @@ public class ArbolAfiliados {
         return retorno;
     }
     
-    /////////////////////////////////////////////////////////////
+     /////////////////////////////////////////////////////////////
     // BUSCAR
-    public TadAbb<Afiliado> buscarPorCi(String ci){
+    public busquedaAfiliado buscarPorCi(String ci){
+        int cant = 0;        
         if(raiz==null){
             return null;
         }else{
-            return buscarRec(raiz, ci);
+            return buscarRec(raiz, ci, cant);
         }
     }
-    
-    private TadAbb<Afiliado> buscarRec(TadAbb<Afiliado> raiz, String ci) {
+    private busquedaAfiliado buscarRec(INodoTadAbb<Afiliado> raiz, String ci, int cant) {
+        
         //SI EL ID ES IGUAL A LA RAIZ        
         if(ci.compareTo(raiz.obtener().getCI()) == 0){
-            return raiz;
+            return new busquedaAfiliado(raiz, cant + 1);
         }
         else{
             //SI EL ID ES MENOR
@@ -154,7 +176,7 @@ public class ArbolAfiliados {
                 if(raiz.izq()==null){
                     return null;
                 }else{
-                    return buscarRec(raiz.izq(), ci);
+                    return buscarRec(raiz.izq(), ci, cant + 1);
                 }
             }
             //SI ES MAYOR
@@ -162,7 +184,7 @@ public class ArbolAfiliados {
                 if(raiz.der()==null){
                     return null;
                 }else{
-                    return buscarRec(raiz.der(), ci);
+                    return buscarRec(raiz.der(), ci, cant + 1);
                 }
             }
         }
@@ -170,7 +192,7 @@ public class ArbolAfiliados {
     
     /////////////////////////////////////////////////////////////
     // ELIMINAR
-    private TadAbb<Afiliado> eliminar(TadAbb<Afiliado> raiz, String x){
+    private INodoTadAbb<Afiliado> eliminar(INodoTadAbb<Afiliado> raiz, String x){
         if(raiz.obtener().getCI().compareTo(x) == 0){
             return borrar(raiz, x);
         }else{
@@ -184,9 +206,8 @@ public class ArbolAfiliados {
     }
 
     /////////////////////////////////////////////////////////////
-    // BORRAR
-    
-    private TadAbb<Afiliado> borrar(TadAbb<Afiliado> raiz, String x) {
+    // BORRAR    
+    private INodoTadAbb<Afiliado> borrar(INodoTadAbb<Afiliado> raiz, String x) {
         if(raiz.izq()==null && raiz.der()==null){
             return null;
         }else{
@@ -196,7 +217,7 @@ public class ArbolAfiliados {
                 if(raiz.der()==null){
                     return raiz.der();
                 }else{
-                    TadAbb<Afiliado> may = numeroMayor(raiz.izq());
+                    INodoTadAbb<Afiliado> may = numeroMayor(raiz.izq());
                     raiz.modificar(may.obtener());
                     raiz.enlIzq(eliminar(raiz.izq(), may.obtener().getCI()));
                     return raiz;
@@ -207,7 +228,7 @@ public class ArbolAfiliados {
 
     /////////////////////////////////////////////////////////////
     // NUMERO MAYOR
-    private TadAbb<Afiliado> numeroMayor(TadAbb<Afiliado> raiz) {
+    private INodoTadAbb<Afiliado> numeroMayor(INodoTadAbb<Afiliado> raiz) {
         if(raiz!=null){
             if(raiz.der()!=null){
                 return numeroMayor(raiz.der());

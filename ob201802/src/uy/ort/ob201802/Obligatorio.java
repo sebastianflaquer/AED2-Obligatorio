@@ -30,20 +30,29 @@ public class Obligatorio {
         p.ver(s.registrarAfiliado("5.555.555-5", "Cinco", "m@gmail.com").resultado, Retorno.Resultado.OK, "Se agrego Afiliado 5");
         p.ver(s.registrarAfiliado("4.517.335-3", "Cuatro", "m@gmail.com").resultado, Retorno.Resultado.OK, "Se agrego Afiliado 4");
         p.ver(s.registrarAfiliado("6.666.666-6", "Seis", "m@gmail.com").resultado, Retorno.Resultado.OK, "Se agrego Afiliado 6");
+        p.ver(s.registrarAfiliado("7.777.777-7", "Siete", "m@gmail.com").resultado, Retorno.Resultado.OK, "Se agrego Afiliado 7");
         
         //REGISTRA UN AFILIADO QUE YA EXISTE
         p.ver(s.registrarAfiliado("3.333.333-3", "Tres", "r@gmail.com").resultado, Retorno.Resultado.ERROR_3, "NO agrego Afiliado POR DUPLICADO");
         
         //REGISTRA UN AFILIADO CON MAIL INVALIDO
-        p.ver(s.registrarAfiliado("7.777.777-7", "Tres", "gmail.com").resultado, Retorno.Resultado.ERROR_2, "NO agrego Afiliado POR MAIL INVALIDO");
+        p.ver(s.registrarAfiliado("8.888.888-8", "Ocho", "gmail.com").resultado, Retorno.Resultado.ERROR_2, "NO agrego Afiliado POR MAIL INVALIDO");
         
         //REGISTRA UN AFILIADO CON CEDULA INVALIDA
-        p.ver(s.registrarAfiliado("8.888.888-1", "Tres", "r@gmail.com").resultado, Retorno.Resultado.ERROR_1, "NO agrego Afiliado POR CEDULA INVALIDA");
+        p.ver(s.registrarAfiliado("8.888-1", "Ocho", "r@gmail.com").resultado, Retorno.Resultado.ERROR_1, "NO agrego Afiliado POR CEDULA INVALIDA");
         
+        //BUSCA AFILIADO
+        //p.ver(s.buscarAfiliado("7.777.777-7").resultado, Retorno.Resultado.OK, "Busca Afiliado");
+        //System.out.print( "Datos Afiliado:"+ s.buscarAfiliado("7.777.777-7").valorString + "\n");
+        //System.out.print( "Cantidad de Busquedas:"+ s.buscarAfiliado("7.777.777-7").valorEntero + "\n");
+        //System.out.print( "\n");
         
-        TadAbb<Afiliado> ar = s.getAbbAfiliados().getRaiz();
+        System.out.print( "Listar Afiliados:"+ s.listarAfiliados().valorString + "\n");
+        
+        INodoTadAbb<Afiliado> ar = s.getAbbAfiliados().getRaiz();
         //JOptionPane.showMessageDialog(null, "Productos: \n"+ s.getAbbAfiliados().mostrar(ar));
         System.out.print( "Productos: \n"+ s.getAbbAfiliados().mostrar(ar));
+        
         
         
         

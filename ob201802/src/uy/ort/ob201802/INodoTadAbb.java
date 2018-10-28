@@ -9,13 +9,13 @@ package uy.ort.ob201802;
  *
  * @author sflaquer
  */
-public interface TadAbb<T> {
+public interface INodoTadAbb<T> {
     
     T obtener();
-    TadAbb<T> izq();
-    TadAbb<T> der();
-    void enlIzq(TadAbb<T> x);
-    void enlDer(TadAbb<T> x);
+    INodoTadAbb<T> izq();
+    INodoTadAbb<T> der();
+    void enlIzq(INodoTadAbb<T> x);
+    void enlDer(INodoTadAbb<T> x);
     void modificar(T x);
     
     

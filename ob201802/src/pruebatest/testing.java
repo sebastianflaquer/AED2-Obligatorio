@@ -5,10 +5,10 @@
  */
 package pruebatest;
 
-import uy.ort.ob201802.ArbolAfiliados;
+import uy.ort.ob201802.ABBAfiliados;
 import uy.ort.ob201802.Afiliado;
-import uy.ort.ob201802.implTadAbb;
-import uy.ort.ob201802.TadAbb;
+import uy.ort.ob201802.NodoTadAbb;
+import uy.ort.ob201802.INodoTadAbb;
 
 /**
  *
@@ -16,14 +16,14 @@ import uy.ort.ob201802.TadAbb;
  */
 public class testing {
     
-    ArbolAfiliados af;
+    ABBAfiliados af;
 
-    public testing(ArbolAfiliados af) {
+    public testing(ABBAfiliados af) {
         this.af = af;
     }
     
     public static void main(String[] args) {
-        ArbolAfiliados af = new ArbolAfiliados();
+        ABBAfiliados af = new ABBAfiliados();
         //Afiliado a1 = new Afiliado(1, "1.517.456-4", "1 Flaquer");
         //Afiliado a2 = new Afiliado(2, "2.517.456-4", "2 Flaquer");
         //Afiliado a3 = new Afiliado(3, "3.517.456-4", "3 Flaquer");
@@ -32,7 +32,7 @@ public class testing {
 //        af.insertar(a2);
 //        af.insertar(a3);
         
-        TadAbb<Afiliado> ar = af.getRaiz();
+        INodoTadAbb<Afiliado> ar = af.getRaiz();
         
         System.out.print("Mostrar Productos");
         

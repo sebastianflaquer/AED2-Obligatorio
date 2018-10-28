@@ -8,7 +8,7 @@ public class Sistema implements ISistema {
     private int cantPuntos;
     private Double coordX;
     private Double coordY;
-    private ArbolAfiliados AbbAfiliados;
+    private ABBAfiliados AbbAfiliados;
 
     
 //    private ABB listaAfiliado;
@@ -41,10 +41,10 @@ public class Sistema implements ISistema {
     public void setCoordY(Double coordY) {
         this.coordY = coordY;
     }
-    public ArbolAfiliados getAbbAfiliados() {
+    public ABBAfiliados getAbbAfiliados() {
         return AbbAfiliados;
     }
-    public void setAbbAfiliados(ArbolAfiliados AbbAfiliados) {
+    public void setAbbAfiliados(ABBAfiliados AbbAfiliados) {
         this.AbbAfiliados = AbbAfiliados;
     }
 //    public ABB getListaCanalera() {
@@ -73,7 +73,7 @@ public class Sistema implements ISistema {
             this.setMaxPuntos(maxPuntos);
             this.setCoordX(coordX);
             this.setCoordY(coordY);
-            this.setAbbAfiliados(new ArbolAfiliados());
+            this.setAbbAfiliados(new ABBAfiliados());
             //this.setListaCanalera();
             return new Retorno(Retorno.Resultado.OK);
         }
@@ -86,18 +86,19 @@ public class Sistema implements ISistema {
         this.setMaxPuntos(0);
         this.setCoordX(null);
         this.setCoordY(null);
+        this.setAbbAfiliados(null);
         return new Retorno(Retorno.Resultado.OK);
     }
 
+    //REGISTRAR AFILIADO
     // DONE - REVISAR
     @Override
     public Retorno registrarAfiliado(String cedula, String nombre, String email) {
         
-        Afiliado AfiliadoActual = new Afiliado(cedula, nombre, email);
-        TadAbb<Afiliado> NodoAfiliado = this.AbbAfiliados.buscarPorCi(cedula);
+        busquedaAfiliado busquedaAfiliado = this.AbbAfiliados.buscarPorCi(cedula);
         
         //SI EL AFILIADO YA EXISTE
-        if(NodoAfiliado != null){
+        if(busquedaAfiliado != null){
             return new Retorno(Resultado.ERROR_3);
         }else{
             //SI LA CI ES VALIDA
@@ -105,6 +106,7 @@ public class Sistema implements ISistema {
                 //SI EL MAIL ES VALIDO
                 if(this.AbbAfiliados.esMailValido(email)){
                     
+                    Afiliado AfiliadoActual = new Afiliado(cedula, nombre, email);
                     this.AbbAfiliados.insertar(AfiliadoActual);
                     return new Retorno(Resultado.OK);
                 }
@@ -119,19 +121,61 @@ public class Sistema implements ISistema {
             }            
         }
     }
-        
+    
+    //BUSCAR AFILIADO
+    //DONE - REVISAR
     @Override
     public Retorno buscarAfiliado(String CI) {
         
-        return new Retorno(Resultado.ERROR_1);
+        String datosAfiliado = "";
+        int cantElemRec = 0;
+        
+        //SI LA CEDULA ES VALIDA
+        if(this.AbbAfiliados.esCIValida(CI)){
+            
+            //BUSCA AL AFILIADO
+            busquedaAfiliado busquedaAfiliadoActual = this.AbbAfiliados.buscarPorCi(CI);
+            INodoTadAbb<Afiliado> NodoAfiliado =  busquedaAfiliadoActual.getAfiliado();
+            
+            //SI EXISTE
+            if(NodoAfiliado != null){
+                datosAfiliado = NodoAfiliado.obtener().getCI()+"; "+ NodoAfiliado.obtener().getNombre()+"; "+NodoAfiliado.obtener().getEmail()+";";
+                cantElemRec = busquedaAfiliadoActual.getCantidad();
+                
+                //FALTA PASAR LA CANTIDAD DE NODOS POR LOS CUALES PASO.
+                return new Retorno(Resultado.OK, datosAfiliado, cantElemRec);
+            }
+            //SI NO EXISTE EL AFILIADO
+            else{
+                return new Retorno(Resultado.ERROR_2);
+            }
+        }
+        //SI LA CI NO VALIDA 
+        else{
+            return new Retorno(Resultado.ERROR_1, "hola", cantElemRec);
+        }
         
     }
 
+    //LISTAR AFILIADO
+    //DONE - REVISAR
     @Override
     public Retorno listarAfiliados() {
-        return new Retorno(Resultado.NO_IMPLEMENTADA);
+        
+        String datosAfiliado = this.AbbAfiliados.listarAscendente();
+        
+        //FALTA PASAR LA CANTIDAD DE NODOS POR LOS CUALES PASO.
+        return new Retorno(Resultado.OK, datosAfiliado, 0);
     }
+        
 
+    
+    
+    
+    
+    
+    
+    
     @Override
     public Retorno registrarCanalera(String chipid, String CIafiliado, Double coordX, Double coordY) {
         
@@ -139,7 +183,13 @@ public class Sistema implements ISistema {
         //Canalera canaleraActual = listaCanalera.buscarCanalera(chipid);
         
         //chequea que exite el afiliado
-        //Afiliado afiliadoActual = this.buscarAfiliado(CIafiliado);
+        busquedaAfiliado busquedaAfiliado = this.AbbAfiliados.buscarPorCi(CIafiliado);
+        //SI EXISTE EL AFILIADO ACTUAL
+        if(busquedaAfiliado != null){
+        
+        }
+        
+        
         
         //si la cantidad es menor que el maximo
         if(cantPuntos < maxPuntos){
