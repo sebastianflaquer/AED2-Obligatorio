@@ -9,7 +9,7 @@ public interface ISistema {
 	
 	Retorno destruirSistema();
 	
-	Retorno registrarAfiliado(int id, String cedula, String nombre, String email);
+	Retorno registrarAfiliado(String cedula, String nombre, String email);
 	
 	Retorno buscarAfiliado(String CI);
 	

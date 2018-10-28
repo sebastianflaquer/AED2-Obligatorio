@@ -8,6 +8,9 @@ public class Sistema implements ISistema {
     private int cantPuntos;
     private Double coordX;
     private Double coordY;
+    private ArbolAfiliados AbbAfiliados;
+
+    
 //    private ABB listaAfiliado;
 //    private ABB listaCanalera;
     private int[][] matrizVertices;
@@ -38,12 +41,12 @@ public class Sistema implements ISistema {
     public void setCoordY(Double coordY) {
         this.coordY = coordY;
     }
-//    public ABB getListaAfiliado() {
-//        return listaAfiliado;
-//    }
-//    public void setListaAfiliado(ABB listaAfiliado) {
-//        this.listaAfiliado = listaAfiliado;
-//    }
+    public ArbolAfiliados getAbbAfiliados() {
+        return AbbAfiliados;
+    }
+    public void setAbbAfiliados(ArbolAfiliados AbbAfiliados) {
+        this.AbbAfiliados = AbbAfiliados;
+    }
 //    public ABB getListaCanalera() {
 //        return listaCanalera;
 //    }
@@ -70,7 +73,7 @@ public class Sistema implements ISistema {
             this.setMaxPuntos(maxPuntos);
             this.setCoordX(coordX);
             this.setCoordY(coordY);
-            //this.setListaAfiliado();
+            this.setAbbAfiliados(new ArbolAfiliados());
             //this.setListaCanalera();
             return new Retorno(Retorno.Resultado.OK);
         }
@@ -86,50 +89,42 @@ public class Sistema implements ISistema {
         return new Retorno(Retorno.Resultado.OK);
     }
 
+    // DONE - REVISAR
     @Override
-    public Retorno registrarAfiliado(int id, String cedula, String nombre, String email) {
+    public Retorno registrarAfiliado(String cedula, String nombre, String email) {
         
-        return new Retorno(Resultado.NO_IMPLEMENTADA);
+        Afiliado AfiliadoActual = new Afiliado(cedula, nombre, email);
+        TadAbb<Afiliado> NodoAfiliado = this.AbbAfiliados.buscarPorCi(cedula);
+        
+        //SI EL AFILIADO YA EXISTE
+        if(NodoAfiliado != null){
+            return new Retorno(Resultado.ERROR_3);
+        }else{
+            //SI LA CI ES VALIDA
+            if(this.AbbAfiliados.esCIValida(cedula)){
+                //SI EL MAIL ES VALIDO
+                if(this.AbbAfiliados.esMailValido(email)){
+                    
+                    this.AbbAfiliados.insertar(AfiliadoActual);
+                    return new Retorno(Resultado.OK);
+                }
+                //SI EL MAIL NO ES VALIDO
+                else{
+                    return new Retorno(Resultado.ERROR_2);
+                }
+            }
+            //SI LA CI NO VALIDA 
+            else{
+                return new Retorno(Resultado.ERROR_1);
+            }            
+        }
     }
         
-    //chequea que la cedula tenga el formato correcto
-    //boolean okCedula = listaAfiliado.ckCedula(cedula);
-
-    //chequea que el mail tenga un formato correcto
-    //boolean okMail = listaAfiliado.ckMail(email);
-
-    //chequea que exite el afiliado
-    //Afiliado afiliadoActual = null;
-    //listaAfiliado.buscarAfiliado(cedula);
-
-
-//        if(false){
-//            //si ya existe un afiliafo con esa CI registrado
-//            return new Retorno(Retorno.Resultado.ERROR_3);
-//        }else{
-//            //SI LA CEDULA ESTA OK
-//            //if(okCedula){
-//                //SI EL MAIL ESTA OK
-//                //if(okMail){
-//                    Afiliado afiliadoActual = new Afiliado(id, cedula, nombre);                    
-//                    //listaAfiliado.insertar(id);// .insertar(afiliadoActual);
-//                    //liafiliadoActualstaAfiliado.insertar(afiliadoActual);
-//                    //ACA VA LA LOGICA PARA CREAR EL AFILIADO
-//                    
-//                    return new Retorno(Resultado.OK);
-//                    
-//                //}else{
-//                //    return new Retorno(Resultado.ERROR_2);
-//                //}
-//            //}else{
-//            //    return new Retorno(Resultado.ERROR_1);
-//            //}
-//            //return new Retorno(Resultado.NO_IMPLEMENTADA);
-//        }
-
     @Override
     public Retorno buscarAfiliado(String CI) {
-        return new Retorno(Resultado.NO_IMPLEMENTADA);
+        
+        return new Retorno(Resultado.ERROR_1);
+        
     }
 
     @Override

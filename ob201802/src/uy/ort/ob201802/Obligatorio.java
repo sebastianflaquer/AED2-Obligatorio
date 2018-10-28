@@ -2,6 +2,8 @@
 
 package uy.ort.ob201802;
 
+import javax.swing.JOptionPane;
+
 
 public class Obligatorio {
 
@@ -22,12 +24,30 @@ public class Obligatorio {
     static void prueba1(Sistema s, Prueba p){
         
         //REGISTRAR AFILIADO
-        p.ver(s.registrarAfiliado(1, "4.517.456-4", "Sebastian Flaquer", "s@gmail.com").resultado, Retorno.Resultado.OK, "Se agrego Afiliado");
-        p.ver(s.registrarAfiliado(2, "3.567.932-3", "Roberto Rodriguez", "r@gmail.com").resultado, Retorno.Resultado.OK, "Se agrego Afiliado");
-        p.ver(s.registrarAfiliado(3, "2.987.134-2", "Martin Perez", "m@gmail.com").resultado, Retorno.Resultado.OK, "Se agrego Afiliado");
-        p.ver(s.registrarAfiliado(4, "1.245.567-1", "Pedro Gonzales", "p@gmail.com").resultado, Retorno.Resultado.OK, "Se agrego Afiliado");
+        p.ver(s.registrarAfiliado("3.333.333-3", "Tres", "r@gmail.com").resultado, Retorno.Resultado.OK, "Se agrego Afiliado 3");
+        p.ver(s.registrarAfiliado("1.111.111-1", "Uno", "s@gmail.com").resultado, Retorno.Resultado.OK, "Se agrego Afiliado 1");
+        p.ver(s.registrarAfiliado("2.222.222-2", "Dos", "s@gmail.com").resultado, Retorno.Resultado.OK, "Se agrego Afiliado 2");
+        p.ver(s.registrarAfiliado("5.555.555-5", "Cinco", "m@gmail.com").resultado, Retorno.Resultado.OK, "Se agrego Afiliado 5");
+        p.ver(s.registrarAfiliado("4.517.335-3", "Cuatro", "m@gmail.com").resultado, Retorno.Resultado.OK, "Se agrego Afiliado 4");
+        p.ver(s.registrarAfiliado("6.666.666-6", "Seis", "m@gmail.com").resultado, Retorno.Resultado.OK, "Se agrego Afiliado 6");
         
-        //p.imprimirResultadosPrueba();
+        //REGISTRA UN AFILIADO QUE YA EXISTE
+        p.ver(s.registrarAfiliado("3.333.333-3", "Tres", "r@gmail.com").resultado, Retorno.Resultado.ERROR_3, "NO agrego Afiliado POR DUPLICADO");
+        
+        //REGISTRA UN AFILIADO CON MAIL INVALIDO
+        p.ver(s.registrarAfiliado("7.777.777-7", "Tres", "gmail.com").resultado, Retorno.Resultado.ERROR_2, "NO agrego Afiliado POR MAIL INVALIDO");
+        
+        //REGISTRA UN AFILIADO CON CEDULA INVALIDA
+        p.ver(s.registrarAfiliado("8.888.888-1", "Tres", "r@gmail.com").resultado, Retorno.Resultado.ERROR_1, "NO agrego Afiliado POR CEDULA INVALIDA");
+        
+        
+        TadAbb<Afiliado> ar = s.getAbbAfiliados().getRaiz();
+        //JOptionPane.showMessageDialog(null, "Productos: \n"+ s.getAbbAfiliados().mostrar(ar));
+        System.out.print( "Productos: \n"+ s.getAbbAfiliados().mostrar(ar));
+        
+        
+        
+        p.imprimirResultadosPrueba();
     }
     
     //PRUEBA 2

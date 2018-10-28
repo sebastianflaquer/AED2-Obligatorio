@@ -11,26 +11,19 @@ package uy.ort.ob201802;
  */
 public class Afiliado implements Comparable<Afiliado>{
     
-    private int id;
+    //private int id;
     private String CI;
     private String Nombre;
     private String email;
 
     //CONSTRUCTOR
-    public Afiliado(int id, String CI, String Nombre) {
-        this.id = id;
+    public Afiliado(String CI, String Nombre, String Email) {
         this.CI = CI;
         this.Nombre = Nombre;
+        this.email = Email;
     }
 
     //GETTER AND SETTER
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
     public String getCI() {
         return CI;
     }
