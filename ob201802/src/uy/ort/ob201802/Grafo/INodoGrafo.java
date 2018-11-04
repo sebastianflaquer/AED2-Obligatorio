@@ -3,21 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package uy.ort.ob201802;
+package uy.ort.ob201802.Grafo;
 
 /**
  *
  * @author sflaquer
- * @param <T>
  */
-public interface INodoTadAbb<T> {
-    
+interface INodoGrafo<T> {
     T obtener();
-    INodoTadAbb<T> izq();
-    INodoTadAbb<T> der();
-    void enlIzq(INodoTadAbb<T> x);
-    void enlDer(INodoTadAbb<T> x);
-    void modificar(T x);
-    
-    
+    T getDato();
 }

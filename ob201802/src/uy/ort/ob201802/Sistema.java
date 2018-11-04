@@ -1,19 +1,23 @@
 package uy.ort.ob201802;
 
+import java.awt.Desktop;
+import java.net.URL;
+import uy.ort.ob201802.Grafo.Grafo;
+import uy.ort.ob201802.Grafo.NodoGrafo;
+import uy.ort.ob201802.Grafo.NodoRed;
+import uy.ort.ob201802.Grafo.NodoServidor;
 import uy.ort.ob201802.Retorno.Resultado;
 
 public class Sistema implements ISistema {
     
     private int maxPuntos;
     private int cantPuntos;
-    private Double coordX;
-    private Double coordY;
+    public Double coordX;
+    public Double coordY;
     private ABBAfiliados AbbAfiliados;
-
+    private Grafo Grafo;
+    //private int[][] matrizVertices;
     
-//    private ABB listaAfiliado;
-//    private ABB listaCanalera;
-    private int[][] matrizVertices;
 
     // GETERS Y SETTERS
     public int getMaxPuntos() {
@@ -22,7 +26,6 @@ public class Sistema implements ISistema {
     public void setMaxPuntos(int maxPuntos) {
         this.maxPuntos = maxPuntos;
     }
-    
     public int getCantPuntos() {
         return cantPuntos;
     }
@@ -47,25 +50,18 @@ public class Sistema implements ISistema {
     public void setAbbAfiliados(ABBAfiliados AbbAfiliados) {
         this.AbbAfiliados = AbbAfiliados;
     }
-//    public ABB getListaCanalera() {
-//        return listaCanalera;
-//    }
-//    public void setListaCanalera(ABB listaCanalera) {
-//        this.listaCanalera = listaCanalera;
-//    }
-    
-    public int[][] getMatrizVertices() {
-        return matrizVertices;
+    public Grafo getGrafo() {
+        return Grafo;
     }
-    public void setMatrizVertices(int[][] matrizVertices) {
-        this.matrizVertices = matrizVertices;
+    public void setGrafo(Grafo Grafo) {
+        this.Grafo = Grafo;
     }
     
     ///////////////////////////////////////////////////////////
     //METODOS                                                //
     ///////////////////////////////////////////////////////////    
 
-    // REVISAR
+    //DONE - REVISAR
     @Override
     public Retorno inicializarSistema (int maxPuntos, Double coordX, Double coordY) {
         //SI ES MAYOR A 0
@@ -73,6 +69,12 @@ public class Sistema implements ISistema {
             this.setMaxPuntos(maxPuntos);
             this.setCoordX(coordX);
             this.setCoordY(coordY);
+             //ADD NODO SISTEMA
+            NodoServidor NodoServidorActual = new NodoServidor("Sistema");
+            NodoGrafo nodoActual = new NodoGrafo(NodoServidorActual, coordX, coordY);
+            this.setCantPuntos(cantPuntos + 1);
+            this.setGrafo(new Grafo(maxPuntos));
+            this.Grafo.agregarVertice(nodoActual);
             this.setAbbAfiliados(new ABBAfiliados());
             //this.setListaCanalera();
             return new Retorno(Retorno.Resultado.OK);
@@ -80,18 +82,19 @@ public class Sistema implements ISistema {
         return new Retorno(Resultado.ERROR_1);
     }
     
-    // REVISAR
+    //DONE - REVISAR
     @Override
     public Retorno destruirSistema() {
         this.setMaxPuntos(0);
         this.setCoordX(null);
         this.setCoordY(null);
+        this.setGrafo(null);
         this.setAbbAfiliados(null);
         return new Retorno(Retorno.Resultado.OK);
     }
 
     //REGISTRAR AFILIADO
-    // DONE - REVISAR
+    //DONE - REVISAR
     @Override
     public Retorno registrarAfiliado(String cedula, String nombre, String email) {
         
@@ -135,15 +138,21 @@ public class Sistema implements ISistema {
             
             //BUSCA AL AFILIADO
             busquedaAfiliado busquedaAfiliadoActual = this.AbbAfiliados.buscarPorCi(CI);
-            INodoTadAbb<Afiliado> NodoAfiliado =  busquedaAfiliadoActual.getAfiliado();
-            
-            //SI EXISTE
-            if(NodoAfiliado != null){
-                datosAfiliado = NodoAfiliado.obtener().getCI()+"; "+ NodoAfiliado.obtener().getNombre()+"; "+NodoAfiliado.obtener().getEmail()+";";
-                cantElemRec = busquedaAfiliadoActual.getCantidad();
-                
-                //FALTA PASAR LA CANTIDAD DE NODOS POR LOS CUALES PASO.
-                return new Retorno(Resultado.OK, datosAfiliado, cantElemRec);
+            if(busquedaAfiliadoActual!=null){
+                INodoTadAbb<Afiliado> NodoAfiliado =  busquedaAfiliadoActual.getAfiliado();
+  
+                //SI EXISTE
+                //if(NodoAfiliado != null){
+                    datosAfiliado = NodoAfiliado.obtener().getCI()+";"+ NodoAfiliado.obtener().getNombre()+";"+NodoAfiliado.obtener().getEmail();
+                    cantElemRec = busquedaAfiliadoActual.getCantidad();
+
+                    //FALTA PASAR LA CANTIDAD DE NODOS POR LOS CUALES PASO.
+                    return new Retorno(Resultado.OK, datosAfiliado, cantElemRec);
+                //}
+                //SI NO EXISTE EL AFILIADO
+//                else{
+//                    return new Retorno(Resultado.ERROR_2);
+//                }
             }
             //SI NO EXISTE EL AFILIADO
             else{
@@ -152,7 +161,7 @@ public class Sistema implements ISistema {
         }
         //SI LA CI NO VALIDA 
         else{
-            return new Retorno(Resultado.ERROR_1, "hola", cantElemRec);
+            return new Retorno(Resultado.ERROR_1);
         }
         
     }
@@ -166,70 +175,166 @@ public class Sistema implements ISistema {
         
         //FALTA PASAR LA CANTIDAD DE NODOS POR LOS CUALES PASO.
         return new Retorno(Resultado.OK, datosAfiliado, 0);
-    }
-        
-
+    }    
     
-    
-    
-    
-    
-    
-    
+    //REGISTRAR CANALERA
+    //DONE - REVISAR
     @Override
     public Retorno registrarCanalera(String chipid, String CIafiliado, Double coordX, Double coordY) {
         
-        //chequea que exite la canalera
-        //Canalera canaleraActual = listaCanalera.buscarCanalera(chipid);
-        
-        //chequea que exite el afiliado
-        busquedaAfiliado busquedaAfiliado = this.AbbAfiliados.buscarPorCi(CIafiliado);
-        //SI EXISTE EL AFILIADO ACTUAL
-        if(busquedaAfiliado != null){
-        
+        //si la cantidad es menor que el maximo
+        if(cantPuntos < maxPuntos){
+            
+            Canalera canaleraActual = new Canalera(chipid, CIafiliado, coordX, coordY);
+            NodoGrafo nodoActual = new NodoGrafo(canaleraActual, coordX,coordY);
+            
+            //si ya existe un punto en esas cordenadas
+            boolean existe = this.Grafo.existeVertice(nodoActual);
+            if(!existe){                
+                //chequea que exite el afiliado
+                busquedaAfiliado busquedaAfiliado = this.AbbAfiliados.buscarPorCi(CIafiliado);
+              
+                //SI EXISTE EL AFILIADO ACTUAL
+                if(busquedaAfiliado != null){
+                    this.Grafo.agregarVertice(nodoActual);
+                    //registrar la canalera
+                    cantPuntos = cantPuntos + 1;
+                    return new Retorno(Resultado.OK);
+                }else{
+                    return new Retorno(Resultado.ERROR_3);
+                }
+            }else{
+                return new Retorno(Resultado.ERROR_2);
+            }
         }
-        
-        
+        //si la cantidad es mayor o igual que el maximo
+        else{
+            return new Retorno(Resultado.ERROR_1);
+        }   
+    }
+    
+    //REGISTRAR NODO
+    //DONE - REVISAR
+    @Override
+    public Retorno registrarNodo(String nodoid, Double coordX, Double coordY) {
         
         //si la cantidad es menor que el maximo
         if(cantPuntos < maxPuntos){
+            
+            NodoRed nodoRedActual = new NodoRed(nodoid);
+            NodoGrafo nodoActual = new NodoGrafo(nodoRedActual, coordX,coordY);
+            
+            //si ya existe un punto en esas cordenadas
+            boolean existe = this.Grafo.existeVertice(nodoActual);
+            if(!existe){
+               
+                this.Grafo.agregarVertice(nodoActual);
+                //registrar la canalera
+                cantPuntos = cantPuntos + 1;
+                return new Retorno(Resultado.OK);
                 
-        }else{//si la cantidad es mayor o igual que el maximo
+            }else{
+                return new Retorno(Resultado.ERROR_2);
+            }
+        }
+        //si la cantidad es mayor o igual que el maximo
+        else{
             return new Retorno(Resultado.ERROR_1);
         }
         
-        return new Retorno(Resultado.NO_IMPLEMENTADA);
     }
-
-    @Override
-    public Retorno registrarNodo(String nodoid, Double coordX, Double coordY) {
-        return new Retorno(Resultado.NO_IMPLEMENTADA);
-    }
-
+    
+    //REGISTRAR TRAMO
+    //DONE - REVISAR
     @Override
     public Retorno registrarTramo(Double coordXi, Double coordYi, Double coordXf, Double coordYf, int perdidaCalidad) {
-        return new Retorno(Resultado.NO_IMPLEMENTADA);
+        
+        //1. Si peso es MAYOR o igual a 0.
+        if(perdidaCalidad > 0){
+            
+            NodoGrafo nodoOrigen = this.Grafo.existeVerticeCordenadas(coordXi, coordYi);
+            NodoGrafo nodoDestino = this.Grafo.existeVerticeCordenadas(coordXf, coordYf);
+            
+            if(nodoOrigen != null && nodoDestino != null){
+                
+                boolean existeArista = this.Grafo.existeArista(nodoOrigen, nodoDestino);
+                
+                //3. Si ya existe un tramo registrado desde coordi a coordf.
+                if(!existeArista){
+                    
+                    if( ((nodoOrigen.getDato() instanceof Canalera) || (nodoDestino.getDato() instanceof Canalera)) && (nodoOrigen.getDato() instanceof NodoServidor) || (nodoDestino.getDato() instanceof NodoServidor)){             
+                        return new Retorno(Resultado.ERROR_4);
+                    }else{
+                        
+                        //CREO EL TRAMO
+                        this.Grafo.agregarArista(nodoOrigen, nodoDestino, perdidaCalidad);
+                        return new Retorno(Resultado.OK);
+                        
+                    }
+                }else{
+                    return new Retorno(Resultado.ERROR_3);
+                }
+            }else{
+                return new Retorno(Resultado.ERROR_2);
+            }
+        }else{
+            return new Retorno(Resultado.ERROR_1);
+        }
     }
-
+    
+    //MODIFICAR TRAMO
+    //DONE - REVISAR
     @Override
     public Retorno modificarTramo(Double coordXi, Double coordYi, Double coordXf, Double coordYf, int nuevoValorPerdidaCalidad) {
-        return new Retorno(Resultado.NO_IMPLEMENTADA);
+        if(nuevoValorPerdidaCalidad >= 0){
+            
+            NodoGrafo nodoOrigen = this.Grafo.existeVerticeCordenadas(coordXi, coordYi);
+            NodoGrafo nodoDestino = this.Grafo.existeVerticeCordenadas(coordXf, coordYf);
+            boolean existeArista = this.Grafo.existeArista(nodoOrigen, nodoDestino);
+            
+            if(existeArista){
+                this.Grafo.modificarPesoArista(nodoOrigen, nodoDestino, nuevoValorPerdidaCalidad);
+                return new Retorno(Resultado.OK);
+            }else{
+                return new Retorno(Resultado.ERROR_2);
+            }
+            
+        }else{
+            return new Retorno(Resultado.ERROR_1);
+        }
     }
-
+    
+    //DIBUJAR MAPA
+    //
+    @Override
+    public Retorno dibujarMapa() {
+        
+        String url = mimapa.getURLMapaPuntos(this.Grafo);
+        
+        try {
+            Desktop.getDesktop().browse(new URL(url).toURI());
+        } 
+        catch (Exception e) { 
+            e.printStackTrace(); 
+        }
+         return new Retorno(Resultado.OK);
+    }	
+    
+    //CALIDAD CANALERA
+    //
     @Override
     public Retorno calidadCanalera(Double coordX, Double coordY) {
         return new Retorno(Resultado.NO_IMPLEMENTADA);
     }
-
+    
+    //NODOSCRITICOS
+    //
     @Override
     public Retorno nodosCriticos() {
         return new Retorno(Resultado.NO_IMPLEMENTADA);
     }
-
-    @Override
-    public Retorno dibujarMapa() {
-        return new Retorno(Resultado.NO_IMPLEMENTADA);
-    }	
+    
+    
 	
 	
 }

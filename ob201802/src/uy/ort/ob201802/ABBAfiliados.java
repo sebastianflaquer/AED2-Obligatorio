@@ -100,42 +100,58 @@ public class ABBAfiliados {
         return retorno;
     }
     public boolean esCIValida(String ci) { 
-        String aux = ci.replaceAll("\\.", "");
-        String aux2 = aux.replaceAll("-", "");
-        ci = aux2;
+                
+        boolean retorno = false;
+        // Patrón para validar el email
+        //Pattern pattern = Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
+        Pattern pattern2 = Pattern.compile("^[1-9].\\d{3}.\\d{3}-[1-9]$");
         
-        if(ci.length() != 7 && ci.length() != 8){ 
-            return false;
-        }else{ 
-            try{ 
-                Integer.parseInt(ci); 
-            }catch (NumberFormatException e){ 
-                return false; 
+        Matcher mather = pattern2.matcher(ci);
+
+        //SI TIENE EL FORMATO VALIDO
+        if (mather.find() == true) {
+            
+            String aux = ci.replaceAll("\\.", "");
+            String aux2 = aux.replaceAll("-", "");
+            ci = aux2;
+
+            //if(ci.length() != 7 && ci.length() != 8){ 
+            if(ci.length() != 8){ 
+                retorno = false;
+            }else{ 
+                try{ 
+                    Integer.parseInt(ci); 
+                }catch (NumberFormatException e){ 
+                    retorno = false;
+                } 
+            }
+
+            int digVerificador = Integer.parseInt((ci.charAt(ci.length() - 1)) + "" ); 
+            int[] factores; 
+            if(ci.length() == 7){ // CI viejas 
+                factores = new int[]{9, 8, 7, 6, 3, 4}; 
+            }else{ 
+                factores = new int[]{2, 9, 8, 7, 6, 3, 4}; 
             } 
+
+            int suma = 0; 
+            for(int i=0; i<ci.length()-1; i++ ){ 
+                int digito = Integer.parseInt(ci.charAt(i) + "" ); 
+                suma += digito * factores[ i ]; 
+            } 
+
+            int resto = suma % 10;
+            int checkdigit = 10 - resto;
+
+            if(checkdigit == 10){ 
+                return (digVerificador == 0); 
+            }else { 
+                return (checkdigit == digVerificador) ; 
+            }
+        }else{
+            retorno = false;
         }
-        
-        int digVerificador = Integer.parseInt((ci.charAt(ci.length() - 1)) + "" ); 
-        int[] factores; 
-        if(ci.length() == 7){ // CI viejas 
-            factores = new int[]{9, 8, 7, 6, 3, 4}; 
-        }else{ 
-            factores = new int[]{2, 9, 8, 7, 6, 3, 4}; 
-        } 
-        
-        int suma = 0; 
-        for(int i=0; i<ci.length()-1; i++ ){ 
-            int digito = Integer.parseInt(ci.charAt(i) + "" ); 
-            suma += digito * factores[ i ]; 
-        } 
-
-        int resto = suma % 10;
-        int checkdigit = 10 - resto;
-
-        if(checkdigit == 10){ 
-            return (digVerificador == 0); 
-        }else { 
-            return (checkdigit == digVerificador) ; 
-        } 
+        return retorno;
     } 
     
     /////////////////////////////////////////////////////////////
