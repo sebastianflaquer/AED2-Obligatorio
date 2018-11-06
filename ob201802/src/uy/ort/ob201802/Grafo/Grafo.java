@@ -82,9 +82,15 @@ public class Grafo {
     public void agregarVertice(NodoGrafo ver) {
         int pos = posLibre();
         vertices[pos] = ver;
+        for (int i = 0; i < tope; i++) {
+            if(matAdy[pos][i].getValor() != 0 || matAdy[i][pos].getValor() != 0){
+                matAdy[pos][i].setExiste(true);
+                matAdy[i][pos].setExiste(true);
+            }
+        }
         cantidad++;
     }
-
+    
     // Pre: existeVertice(origen) && existeVertice(destino) &&
     // !existeArista(origen, destino)
     public void agregarArista(NodoGrafo origen, NodoGrafo destino, int peso) {
@@ -188,14 +194,80 @@ public class Grafo {
         matAdy[posOrigen][posDestino].setExiste(false);
         matAdy[posDestino][posOrigen].setExiste(false);
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    ///////////////////////////////
+    // DFS MODIFICADO
+    public int ejecutaDFS(){
+        boolean[] vis = new boolean[tope];
+        int count = 0;            
+        int pos = posOcupada();
 
+        if(pos != -1){
+            ejecutaDFSRec(pos, vis); 
+        }
+
+//        if(pos != -1){
+//            for (int i = 0; i < tope; i++) {
+//                if(!vis[i] && vertices[i] != null)
+//                {
+//                    ejecutaDFSRec(i, vis); 
+//                    //DFSRec(i, vis);
+//                }
+//            }
+//        }
+
+        for (int i = 0; i < vis.length ; i++) {
+            if(vis[i] == false){
+                count++;
+            }
+        }
+
+        return count;
+    }
+    private void ejecutaDFSRec(int pos, boolean[] vis) {
+        //vis[pos] = true;
+
+        //Canalera CanaleraActual = (Canalera) vertices[pos].obtener();                
+        //System.out.println(CanaleraActual.getCIafiliado());
+        for (int i = 1; i < tope; i++) {
+            if(!vis[i] && matAdy[pos][i].isExiste()){
+                if(this.vertices[pos].getDato() instanceof NodoRed){
+                    vis[pos] = true;
+                }
+                ejecutaDFSRec(i, vis);
+            }
+        }
+    }
+    ///////////////////////////////
+    // DFS MODIFICADO END
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    ///////////////////////////////
+    // DFS
     public void DFS(){
         boolean[] vis = new boolean[tope];
         int pos = posOcupada();
         if(pos != -1){
             for (int i = 0; i < tope; i++) {
-                if(!vis[i] && vertices[i] != null)
-                {
+                if(!vis[i] && vertices[i] != null){
                     DFSRec(i, vis);
                 }
             }
@@ -203,6 +275,7 @@ public class Grafo {
     }
 
     private void DFSRec(int pos, boolean[] vis) {
+        System.out.println("Llamo");
         vis[pos] = true;
         System.out.println(vertices[pos]);
         for (int i = 0; i < tope; i++) {
@@ -214,7 +287,8 @@ public class Grafo {
     }
 
 
-
+    ///////////////////////////////
+    // BFS
     public void BFS(){
         boolean[] vis = new boolean[tope];
         int pos = posOcupada();
@@ -245,7 +319,121 @@ public class Grafo {
             }
         }
     }
-
     
+    ///////////////////////////////
+    // 
+    //Pre: !esVacio()
+    public Grafo prim(){
+		
+        Grafo ret = new Grafo(tope);
+
+        for (int i = 0; i < tope; i++) {
+            if(vertices[i] != null)
+            {
+                ret.agregarVertice(vertices[i]);
+            }
+        }
+
+        boolean[] vis = new boolean[tope];
+        // for (int i = 0; i < tope; vis[i++]=false);
+
+        vis[posOcupada()] = true;
+
+        for (int k = 0; k < cantidad-1; k++) {
+
+            int min = Integer.MAX_VALUE;
+            int posOrigen = -1;
+            int posDestino = -1;
+
+            for (int i = 0; i < tope; i++) {
+                if(vis[i])
+                {
+                    for (int j = 0; j < tope; j++) {
+                        if(!vis[j] && matAdy[i][j].isExiste() && matAdy[i][j].getValor() < min)
+                        {
+                            min = matAdy[i][j].getValor();
+                            posOrigen = i;
+                            posDestino = j;
+                        }
+                    }
+                }
+            }
+
+            ret.agregarArista(vertices[posOrigen], vertices[posDestino], min);
+            vis[posDestino] = true;
+
+        }
+
+        return ret;
+    }
+	
+    public int dijkstra(NodoGrafo origen, NodoGrafo destino) {
+        int posO = posVertice(origen);
+        int posD = posVertice(destino);
+
+        // Etapa 1: Inicializo vectores
+        int[] dist = new int[tope];
+        int[] ant = new int[tope];
+        boolean[] vis = new boolean[tope];
+        
+        //for (int i = 0; i < tope; ant[i] = -1,dist[i] = Integer.MAX_VALUE,i++);
+        for (int i = 0; i < tope; i++){
+            ant[i] = -1;
+            dist[i] = Integer.MAX_VALUE;
+        }
+        
+        dijkstraInterno(posO, dist, ant, vis);
+        
+        if(dist[posD] == Integer.MAX_VALUE){
+            return -1;
+        }else{
+            return dist[posD];
+        }
+    }
+
+    private void dijkstraInterno(int posO, int[] dist, int[] ant, boolean[] vis) {
+        // Etapa 2: Actualizo las distancias de los adyacentes del origen
+        dist[posO] = 0;
+        vis[posO] = true;
+
+        for (int i = 0; i < tope; i++) {
+            if(matAdy[posO][i].isExiste()) {
+                dist[i] = matAdy[posO][i].getValor();
+                ant[i] = posO;
+            }
+        }
+
+        // Etapa 3: Proceso iterativo para actualizar distancias,
+        //    actualizando aquellas aristas que marquen un mejor camino
+
+        for (int k = 1; k < tope; k++) {
+            // Elijo al próximo vertice, siendo éste el de menor distancia no visitada
+            int posCand = -1;
+            int min = Integer.MAX_VALUE;
+            for (int i = 0; i < tope; i++) {
+                if(!vis[i] && dist[i]<min) {
+                    min = dist[i];
+                    posCand = i;
+                }
+            }
+
+            // Si no hay candidato, no es conexo.
+            if(posCand == -1){
+                return;
+            }   
+
+            vis[posCand] = true;
+
+            for (int i = 0; i < tope; i++) {
+                if(!vis[i] && matAdy[posCand][i].isExiste()){
+                    int sumaDist = dist[posCand] + matAdy[posCand][i].getValor();
+                    if(sumaDist < dist[i]){
+                        dist[i] = sumaDist;
+                        ant[i] = posCand;						
+                    }
+                }
+            }
+        }
+    }
 }
 

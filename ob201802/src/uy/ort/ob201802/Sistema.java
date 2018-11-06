@@ -61,7 +61,7 @@ public class Sistema implements ISistema {
     //METODOS                                                //
     ///////////////////////////////////////////////////////////    
 
-    //DONE - REVISAR
+    //DONE
     @Override
     public Retorno inicializarSistema (int maxPuntos, Double coordX, Double coordY) {
         //SI ES MAYOR A 0
@@ -82,7 +82,7 @@ public class Sistema implements ISistema {
         return new Retorno(Resultado.ERROR_1);
     }
     
-    //DONE - REVISAR
+    //DONE
     @Override
     public Retorno destruirSistema() {
         this.setMaxPuntos(0);
@@ -94,7 +94,7 @@ public class Sistema implements ISistema {
     }
 
     //REGISTRAR AFILIADO
-    //DONE - REVISAR
+    //DONE
     @Override
     public Retorno registrarAfiliado(String cedula, String nombre, String email) {
         
@@ -126,7 +126,7 @@ public class Sistema implements ISistema {
     }
     
     //BUSCAR AFILIADO
-    //DONE - REVISAR
+    //DONE
     @Override
     public Retorno buscarAfiliado(String CI) {
         
@@ -167,7 +167,7 @@ public class Sistema implements ISistema {
     }
 
     //LISTAR AFILIADO
-    //DONE - REVISAR
+    //DONE
     @Override
     public Retorno listarAfiliados() {
         
@@ -178,7 +178,7 @@ public class Sistema implements ISistema {
     }    
     
     //REGISTRAR CANALERA
-    //DONE - REVISAR
+    //DONE
     @Override
     public Retorno registrarCanalera(String chipid, String CIafiliado, Double coordX, Double coordY) {
         
@@ -214,7 +214,7 @@ public class Sistema implements ISistema {
     }
     
     //REGISTRAR NODO
-    //DONE - REVISAR
+    //DONE
     @Override
     public Retorno registrarNodo(String nodoid, Double coordX, Double coordY) {
         
@@ -245,7 +245,7 @@ public class Sistema implements ISistema {
     }
     
     //REGISTRAR TRAMO
-    //DONE - REVISAR
+    //DONE
     @Override
     public Retorno registrarTramo(Double coordXi, Double coordYi, Double coordXf, Double coordYf, int perdidaCalidad) {
         
@@ -283,29 +283,115 @@ public class Sistema implements ISistema {
     }
     
     //MODIFICAR TRAMO
-    //DONE - REVISAR
+    //DONE
     @Override
     public Retorno modificarTramo(Double coordXi, Double coordYi, Double coordXf, Double coordYf, int nuevoValorPerdidaCalidad) {
         if(nuevoValorPerdidaCalidad >= 0){
             
             NodoGrafo nodoOrigen = this.Grafo.existeVerticeCordenadas(coordXi, coordYi);
             NodoGrafo nodoDestino = this.Grafo.existeVerticeCordenadas(coordXf, coordYf);
-            boolean existeArista = this.Grafo.existeArista(nodoOrigen, nodoDestino);
             
-            if(existeArista){
-                this.Grafo.modificarPesoArista(nodoOrigen, nodoDestino, nuevoValorPerdidaCalidad);
-                return new Retorno(Resultado.OK);
+            if(nodoOrigen != null && nodoDestino != null){
+                
+                boolean existeArista = this.Grafo.existeArista(nodoOrigen, nodoDestino);
+                if(existeArista){
+                    this.Grafo.modificarPesoArista(nodoOrigen, nodoDestino, nuevoValorPerdidaCalidad);
+                    return new Retorno(Resultado.OK);
+                }else{
+                    return new Retorno(Resultado.ERROR_2);
+                }
             }else{
                 return new Retorno(Resultado.ERROR_2);
             }
-            
         }else{
             return new Retorno(Resultado.ERROR_1);
         }
     }
     
-    //DIBUJAR MAPA
+    
+    //CALIDAD CANALERA
     //
+    @Override
+    public Retorno calidadCanalera(Double coordX, Double coordY) {
+        
+        int perdidaCalidad = -1;
+        NodoGrafo nodoCanalera = this.Grafo.existeVerticeCordenadas(coordX, coordY);
+
+        if(nodoCanalera!=null){
+            
+            NodoGrafo nodoServidor = this.Grafo.existeVerticeCordenadas(this.coordX, this.coordY);
+            perdidaCalidad = this.Grafo.dijkstra(nodoServidor,nodoCanalera);
+            
+            if(perdidaCalidad >= 0){   
+                return new Retorno(Resultado.OK, "", perdidaCalidad);
+            }else{
+                return new Retorno(Resultado.ERROR_2);
+            }
+        }else{
+            return new Retorno(Resultado.ERROR_1);
+        }       
+        //return new Retorno(Resultado.NO_IMPLEMENTADA);
+    }
+    
+    //NODOSCRITICOS
+    //
+    @Override
+    public Retorno nodosCriticos() {
+        
+        NodoGrafo[] verticesAux = Grafo.getVertices();
+        int canFull = Grafo.ejecutaDFS();
+        int canAux = 0;
+        String retorno = "";
+
+        //recorro la lista de vertices
+        for(int i = 0; i < verticesAux.length ; i++){
+
+            // ARMA EL STRING CON EL ID DEL NODO
+            if(verticesAux[i] != null){
+                if(verticesAux[i].getDato() instanceof NodoRed){
+                    String retAux = "";
+                    NodoGrafo puntoActual = verticesAux[i];                    
+                    
+                    //ARMA EL STRING CON LAS CORDENADAS
+                    retAux += puntoActual.getCoordX() + ";";
+                    retAux += puntoActual.getCoordY();
+                    
+                    //ARMA EL STRING CON LOS ID DE LOS NODOS
+                    //NodoGrafo<NodoRed> nodoRedAct = puntoActual;
+                    //retAux += nodoRedAct.obtener().getNodoid();
+                    
+                    retAux += "|";
+
+                    //copia el punto para tenerlo al borrarlo
+                    NodoGrafo NodoGrafoAux = new NodoGrafo(verticesAux[i].obtener(), verticesAux[i].getCoordX(), verticesAux[i].getCoordY());
+                    //END
+
+                    //BORRA EL VERTICE
+                    Grafo.borrarVertice(verticesAux[i]);                    
+                    //END
+
+                    //me fijo si tiene 2 false mas que cantFull
+                    canAux = Grafo.ejecutaDFS();
+                    if( canAux > (canFull + 1) ){
+                        retorno += retAux;
+                    }
+
+                    Grafo.agregarVertice(NodoGrafoAux);//borrarVertice(verAux[i]);
+                    //int canDespues = Grafo.ejecutaDFS();
+                }
+            }
+        }
+        
+        //Corta la cadena para eliminar la ultima barra
+        String sSubCadena = retorno.substring(0,retorno.length()-1);        
+        //System.out.print(sSubCadena);
+        
+        return new Retorno(Resultado.OK, sSubCadena, 0);
+    }
+    
+    
+    //DIBUJAR MAPA
+    //DONE
     @Override
     public Retorno dibujarMapa() {
         
@@ -318,23 +404,6 @@ public class Sistema implements ISistema {
             e.printStackTrace(); 
         }
          return new Retorno(Resultado.OK);
-    }	
-    
-    //CALIDAD CANALERA
-    //
-    @Override
-    public Retorno calidadCanalera(Double coordX, Double coordY) {
-        return new Retorno(Resultado.NO_IMPLEMENTADA);
     }
-    
-    //NODOSCRITICOS
-    //
-    @Override
-    public Retorno nodosCriticos() {
-        return new Retorno(Resultado.NO_IMPLEMENTADA);
-    }
-    
-    
-	
 	
 }

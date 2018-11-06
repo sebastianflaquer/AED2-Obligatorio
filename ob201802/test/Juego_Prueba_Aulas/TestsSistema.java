@@ -357,7 +357,7 @@ public class TestsSistema {
 		// Nodos
 		assertEquals(Retorno.Resultado.OK, sistema.registrarNodo("N1", -1.0,-1.0).resultado);
 		assertEquals(Retorno.Resultado.OK, sistema.registrarNodo("N2", -2.0,-2.0).resultado);
-		assertEquals(Retorno.Resultado.OK, sistema.registrarNodo("N2", -3.0,-3.0).resultado);
+		assertEquals(Retorno.Resultado.OK, sistema.registrarNodo("N3", -3.0,-3.0).resultado);
 		assertEquals(Retorno.Resultado.OK, sistema.registrarNodo("N4", -4.0,-4.0).resultado);
 		assertEquals(Retorno.Resultado.OK, sistema.registrarNodo("N5", -5.0,-5.0).resultado);
 		//Canaleras
