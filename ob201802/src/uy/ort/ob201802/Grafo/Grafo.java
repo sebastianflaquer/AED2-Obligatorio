@@ -5,8 +5,6 @@
  */
 package uy.ort.ob201802.Grafo;
 
-import Cola.Cola;
-
 public class Grafo {
 
     private NodoGrafo[] vertices;

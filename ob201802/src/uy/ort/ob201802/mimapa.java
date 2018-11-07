@@ -19,7 +19,7 @@ class mimapa {
         
         //int contador = 0;
         String Marker = "";
-        String Tipo = "";
+        String Tipo;
         NodoGrafo[] vertices = Grafo.getVertices();
                 
         for(int i = 0; i < Grafo.getTope(); i++){

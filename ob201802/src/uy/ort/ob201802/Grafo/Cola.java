@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Cola;
+package uy.ort.ob201802.Grafo;
+
+import uy.ort.ob201802.Grafo.NodoCola;
 
 public class Cola<T> {
 	private NodoCola<T> inicio;

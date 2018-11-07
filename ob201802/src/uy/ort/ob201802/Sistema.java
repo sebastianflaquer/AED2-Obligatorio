@@ -334,7 +334,7 @@ public class Sistema implements ISistema {
     }
     
     //NODOSCRITICOS
-    //
+    // DONE
     @Override
     public Retorno nodosCriticos() {
         
@@ -383,8 +383,7 @@ public class Sistema implements ISistema {
         }
         
         //Corta la cadena para eliminar la ultima barra
-        String sSubCadena = retorno.substring(0,retorno.length()-1);        
-        //System.out.print(sSubCadena);
+        String sSubCadena = retorno.substring(0,retorno.length()-1);
         
         return new Retorno(Resultado.OK, sSubCadena, 0);
     }
