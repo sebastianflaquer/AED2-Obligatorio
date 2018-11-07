@@ -10,6 +10,5 @@ package uy.ort.ob201802.Grafo;
  * @author sflaquer
  */
 interface INodoGrafo<T> {
-    T obtener();
-    T getDato();
+    
 }

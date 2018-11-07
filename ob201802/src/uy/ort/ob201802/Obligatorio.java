@@ -162,28 +162,11 @@ public class Obligatorio {
         System.out.print( "Dibujar Mapa: \n");
         p.ver(s.dibujarMapa().resultado, Retorno.Resultado.OK, "Dibujar Mapa");
         
+        System.out.print( "Destruir Sistema: \n");
+        p.ver(s.destruirSistema().resultado, Retorno.Resultado.OK, "Destruir Sistema");
+        
         p.imprimirResultadosPrueba();
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     //PRUEBA 2

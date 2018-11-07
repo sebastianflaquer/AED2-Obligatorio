@@ -30,9 +30,6 @@ public class ABBAfiliados {
 
     //INSERTAR
     private void insertarRec(INodoTadAbb<Afiliado> raiz, Afiliado a) {
-        //1 - este mayor a este
-        //0 - iguales
-        //-1 - este mayor a este        
         
         //SI EL ID ES MENOR
         //if(a.getId() < raiz.obtener().getId()){
@@ -72,13 +69,15 @@ public class ABBAfiliados {
     public String listarAscendente() {
         String listado ="";
         listado+= listarAscendenteRec(raiz, listado);
-        return listado;
+        
+        String sSubCadena = listado.substring(0,listado.length()-1);
+        return sSubCadena;
     }
     private String listarAscendenteRec(INodoTadAbb<Afiliado> nodo, String listado) {
         
         if (nodo != null) {
             listado = listarAscendenteRec(nodo.izq(), listado);
-            listado += nodo.obtener().getCI()+";"+ nodo.obtener().getNombre()+";"+ nodo.obtener().getEmail()+"| \n";
+            listado += nodo.obtener().getCI()+";"+ nodo.obtener().getNombre()+";"+ nodo.obtener().getEmail()+"|";
             listado = listarAscendenteRec(nodo.der(), listado);
         }
         return listado;
@@ -102,10 +101,8 @@ public class ABBAfiliados {
     public boolean esCIValida(String ci) { 
                 
         boolean retorno = false;
-        // Patrón para validar el email
-        //Pattern pattern = Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
-        Pattern pattern2 = Pattern.compile("^[1-9].\\d{3}.\\d{3}-[1-9]$");
-        
+        // Patrón para validar el email        
+        Pattern pattern2 = Pattern.compile("^[1-9].\\d{3}.\\d{3}-[1-9]$");        
         Matcher mather = pattern2.matcher(ci);
 
         //SI TIENE EL FORMATO VALIDO

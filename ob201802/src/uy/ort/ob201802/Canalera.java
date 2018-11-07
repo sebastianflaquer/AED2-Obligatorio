@@ -4,26 +4,30 @@
  * and open the template in the editor.
  */
 package uy.ort.ob201802;
+import uy.ort.ob201802.Grafo.NodoGrafo;
 
 /**
  *
  * @author sflaquer
  */
-public class Canalera{
+public class Canalera extends NodoGrafo{
     
     private String chipid;
     private String CIafiliado;
-    private Double coordX;
-    private Double coordY;
     
     ////////////////////////////////
     //CONSTRUCTOR
     ////////////////////////////////
-    public Canalera(String chipid, String CIafiliado, Double coordX, Double coordY) {
+    public Canalera() {
+        super();
+        this.chipid = null;
+        this.CIafiliado = null;
+    }
+    
+    public Canalera(String chipid, String CIafiliado, double coordX, double coordY) {
+        super("Canalera", coordX, coordY);
         this.chipid = chipid;
         this.CIafiliado = CIafiliado;
-        this.coordX = coordX;
-        this.coordY = coordY;
     }
     
     ////////////////////////////////
@@ -43,22 +47,6 @@ public class Canalera{
 
     public void setCIafiliado(String CIafiliado) {
         this.CIafiliado = CIafiliado;
-    }
-
-    public Double getCoordX() {
-        return coordX;
-    }
-
-    public void setCoordX(Double coordX) {
-        this.coordX = coordX;
-    }
-
-    public Double getCoordY() {
-        return coordY;
-    }
-
-    public void setCoordY(Double coordY) {
-        this.coordY = coordY;
     }
     
 }

@@ -7,7 +7,6 @@ package uy.ort.ob201802;
 
 import uy.ort.ob201802.Grafo.Grafo;
 import uy.ort.ob201802.Grafo.NodoGrafo;
-import uy.ort.ob201802.Grafo.NodoRed;
 
 /**
  *
@@ -30,10 +29,10 @@ class mimapa {
                 NodoGrafo nodoActual = Grafo.existeVerticeCordenadas(cordX, cordY);
                 
                 //SI ES CANALERA
-                if(nodoActual.getDato() instanceof Canalera){
+                if(nodoActual.getTipo() == "Canalera"){
                     Marker += "markers=color:blue";
                     Tipo = "C";
-                }else if(nodoActual.getDato() instanceof NodoRed){                    
+                }else if(nodoActual.getTipo() == "NodoRed"){                    
                     Marker += "markers=color:red";
                     Tipo = "N";
                 }else{

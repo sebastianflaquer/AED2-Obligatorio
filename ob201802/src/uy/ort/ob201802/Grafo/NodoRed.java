@@ -9,7 +9,7 @@ package uy.ort.ob201802.Grafo;
  *
  * @author sflaquer
  */
-public class NodoRed {
+public class NodoRed extends NodoGrafo{
     
     private String nodoid;
     
@@ -17,6 +17,12 @@ public class NodoRed {
     //CONSTRUCTOR
     ////////////////////////////////
     public NodoRed(String nodoid) {
+        super();
+        this.nodoid = nodoid;
+    }
+    
+    public NodoRed(String nodoid, double coordX, double coordY) {
+        super("NodoRed", coordX, coordY);
         this.nodoid = nodoid;
     }
     

@@ -70,11 +70,10 @@ public class Sistema implements ISistema {
             this.setCoordX(coordX);
             this.setCoordY(coordY);
              //ADD NODO SISTEMA
-            NodoServidor NodoServidorActual = new NodoServidor("Sistema");
-            NodoGrafo nodoActual = new NodoGrafo(NodoServidorActual, coordX, coordY);
+            NodoServidor NodoServidorActual = new NodoServidor("Sistema", coordX, coordY);
             this.setCantPuntos(cantPuntos + 1);
             this.setGrafo(new Grafo(maxPuntos));
-            this.Grafo.agregarVertice(nodoActual);
+            this.Grafo.agregarVertice(NodoServidorActual);
             this.setAbbAfiliados(new ABBAfiliados());
             //this.setListaCanalera();
             return new Retorno(Retorno.Resultado.OK);
@@ -85,9 +84,10 @@ public class Sistema implements ISistema {
     //DONE
     @Override
     public Retorno destruirSistema() {
-        this.setMaxPuntos(0);
-        this.setCoordX(null);
-        this.setCoordY(null);
+        this.maxPuntos = 0;
+        this.cantPuntos = 0;
+        this.coordX = null;
+        this.coordY = null;
         this.setGrafo(null);
         this.setAbbAfiliados(null);
         return new Retorno(Retorno.Resultado.OK);
@@ -142,17 +142,11 @@ public class Sistema implements ISistema {
                 INodoTadAbb<Afiliado> NodoAfiliado =  busquedaAfiliadoActual.getAfiliado();
   
                 //SI EXISTE
-                //if(NodoAfiliado != null){
-                    datosAfiliado = NodoAfiliado.obtener().getCI()+";"+ NodoAfiliado.obtener().getNombre()+";"+NodoAfiliado.obtener().getEmail();
-                    cantElemRec = busquedaAfiliadoActual.getCantidad();
+                datosAfiliado = NodoAfiliado.obtener().getCI()+";"+ NodoAfiliado.obtener().getNombre()+";"+NodoAfiliado.obtener().getEmail();
+                cantElemRec = busquedaAfiliadoActual.getCantidad();
 
-                    //FALTA PASAR LA CANTIDAD DE NODOS POR LOS CUALES PASO.
-                    return new Retorno(Resultado.OK, datosAfiliado, cantElemRec);
-                //}
-                //SI NO EXISTE EL AFILIADO
-//                else{
-//                    return new Retorno(Resultado.ERROR_2);
-//                }
+                //FALTA PASAR LA CANTIDAD DE NODOS POR LOS CUALES PASO.
+                return new Retorno(Resultado.OK, datosAfiliado, cantElemRec);
             }
             //SI NO EXISTE EL AFILIADO
             else{
@@ -170,10 +164,7 @@ public class Sistema implements ISistema {
     //DONE
     @Override
     public Retorno listarAfiliados() {
-        
         String datosAfiliado = this.AbbAfiliados.listarAscendente();
-        
-        //FALTA PASAR LA CANTIDAD DE NODOS POR LOS CUALES PASO.
         return new Retorno(Resultado.OK, datosAfiliado, 0);
     }    
     
@@ -186,17 +177,16 @@ public class Sistema implements ISistema {
         if(cantPuntos < maxPuntos){
             
             Canalera canaleraActual = new Canalera(chipid, CIafiliado, coordX, coordY);
-            NodoGrafo nodoActual = new NodoGrafo(canaleraActual, coordX,coordY);
             
             //si ya existe un punto en esas cordenadas
-            boolean existe = this.Grafo.existeVertice(nodoActual);
+            boolean existe = this.Grafo.existeVertice(canaleraActual);
             if(!existe){                
                 //chequea que exite el afiliado
                 busquedaAfiliado busquedaAfiliado = this.AbbAfiliados.buscarPorCi(CIafiliado);
               
                 //SI EXISTE EL AFILIADO ACTUAL
                 if(busquedaAfiliado != null){
-                    this.Grafo.agregarVertice(nodoActual);
+                    this.Grafo.agregarVertice(canaleraActual);
                     //registrar la canalera
                     cantPuntos = cantPuntos + 1;
                     return new Retorno(Resultado.OK);
@@ -221,14 +211,13 @@ public class Sistema implements ISistema {
         //si la cantidad es menor que el maximo
         if(cantPuntos < maxPuntos){
             
-            NodoRed nodoRedActual = new NodoRed(nodoid);
-            NodoGrafo nodoActual = new NodoGrafo(nodoRedActual, coordX,coordY);
+            NodoRed nodoRedActual = new NodoRed(nodoid, coordX, coordY);
             
             //si ya existe un punto en esas cordenadas
-            boolean existe = this.Grafo.existeVertice(nodoActual);
+            boolean existe = this.Grafo.existeVertice(nodoRedActual);
             if(!existe){
                
-                this.Grafo.agregarVertice(nodoActual);
+                this.Grafo.agregarVertice(nodoRedActual);
                 //registrar la canalera
                 cantPuntos = cantPuntos + 1;
                 return new Retorno(Resultado.OK);
@@ -261,15 +250,12 @@ public class Sistema implements ISistema {
                 
                 //3. Si ya existe un tramo registrado desde coordi a coordf.
                 if(!existeArista){
-                    
-                    if( ((nodoOrigen.getDato() instanceof Canalera) || (nodoDestino.getDato() instanceof Canalera)) && (nodoOrigen.getDato() instanceof NodoServidor) || (nodoDestino.getDato() instanceof NodoServidor)){             
+                    if( ((nodoOrigen.getTipo() == "Canalera") || (nodoDestino.getTipo() == "Canalera")) && (nodoOrigen.getTipo() == "Servidor") || (nodoDestino.getTipo() == "Servidor")){             
                         return new Retorno(Resultado.ERROR_4);
                     }else{
-                        
                         //CREO EL TRAMO
                         this.Grafo.agregarArista(nodoOrigen, nodoDestino, perdidaCalidad);
                         return new Retorno(Resultado.OK);
-                        
                     }
                 }else{
                     return new Retorno(Resultado.ERROR_3);
@@ -310,7 +296,7 @@ public class Sistema implements ISistema {
     
     
     //CALIDAD CANALERA
-    //
+    //DONE
     @Override
     public Retorno calidadCanalera(Double coordX, Double coordY) {
         
@@ -334,7 +320,7 @@ public class Sistema implements ISistema {
     }
     
     //NODOSCRITICOS
-    // DONE
+    //DONE
     @Override
     public Retorno nodosCriticos() {
         
@@ -348,7 +334,7 @@ public class Sistema implements ISistema {
 
             // ARMA EL STRING CON EL ID DEL NODO
             if(verticesAux[i] != null){
-                if(verticesAux[i].getDato() instanceof NodoRed){
+                if(verticesAux[i] instanceof NodoRed){
                     String retAux = "";
                     NodoGrafo puntoActual = verticesAux[i];                    
                     
@@ -356,14 +342,10 @@ public class Sistema implements ISistema {
                     retAux += puntoActual.getCoordX() + ";";
                     retAux += puntoActual.getCoordY();
                     
-                    //ARMA EL STRING CON LOS ID DE LOS NODOS
-                    //NodoGrafo<NodoRed> nodoRedAct = puntoActual;
-                    //retAux += nodoRedAct.obtener().getNodoid();
-                    
                     retAux += "|";
 
                     //copia el punto para tenerlo al borrarlo
-                    NodoGrafo NodoGrafoAux = new NodoGrafo(verticesAux[i].obtener(), verticesAux[i].getCoordX(), verticesAux[i].getCoordY());
+                    NodoGrafo NodoGrafoAux = new NodoGrafo(verticesAux[i].getTipo(), verticesAux[i].getCoordX(), verticesAux[i].getCoordY());
                     //END
 
                     //BORRA EL VERTICE

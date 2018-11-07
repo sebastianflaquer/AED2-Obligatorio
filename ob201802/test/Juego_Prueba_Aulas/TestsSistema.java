@@ -127,10 +127,8 @@ public class TestsSistema {
             assertTrue(res.valorString.contains("1.111.111-1")||res.valorString.contains("11111111"));
             assertTrue(res.valorString.contains("2.222.222-2")||res.valorString.contains("22222222"));
             //Validar que estan ordenados
-            assertTrue(res.valorString.indexOf("5.555.555-5")>res.valorString.indexOf("1.111.111-1") ||
-                                    res.valorString.indexOf("55555555")>res.valorString.indexOf("11111111"));
-            assertTrue(res.valorString.indexOf("9.999.999-9")>res.valorString.indexOf("2.222.222-2") ||
-                            res.valorString.indexOf("99999999")>res.valorString.indexOf("22222222"));
+            assertTrue(res.valorString.indexOf("5.555.555-5")>res.valorString.indexOf("1.111.111-1") || res.valorString.indexOf("55555555")>res.valorString.indexOf("11111111")); 
+            assertTrue(res.valorString.indexOf("9.999.999-9")>res.valorString.indexOf("2.222.222-2") || res.valorString.indexOf("99999999")>res.valorString.indexOf("22222222"));
 	}
 
 	//TESTS MAPA

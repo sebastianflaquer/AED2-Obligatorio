@@ -9,7 +9,7 @@ package uy.ort.ob201802;
  *
  * @author sflaquer
  */
-public class Afiliado implements Comparable<Afiliado>{
+public class Afiliado{
     
     //private int id;
     private String CI;
@@ -46,12 +46,6 @@ public class Afiliado implements Comparable<Afiliado>{
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    @Override
-    public int compareTo(Afiliado t) {
-        int ret = (int) Math.signum(this.CI.compareTo(t.CI));
-        return ret;
     }
     
 }

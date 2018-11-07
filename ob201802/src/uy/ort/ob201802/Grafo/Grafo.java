@@ -125,9 +125,12 @@ public class Grafo {
     private int posVertice(NodoGrafo ver) {
         for (int i = 0; i < tope; i++){
             if(vertices[i] != null){
-                if(ver.equals(vertices[i])){
+                if(ver.getCoordX() == vertices[i].getCoordX() && ver.getCoordY() == vertices[i].getCoordY()){
                     return i;
                 }
+//                if(ver.equals(vertices[i])){
+//                    return i;
+//                }
             }
         }
         return -1;
@@ -137,6 +140,7 @@ public class Grafo {
     public boolean existeVerticeCord(Double coordX, Double coordY) {
         return posVerticeCord(coordX, coordY) != -1;
     }
+    
     private int posVerticeCord(Double coordX, Double coordY) {
         for (int i = 0; i < tope; i++)
             if ((coordX.equals(vertices[i].getCoordY())) &&  (coordY.equals(vertices[i].getCoordY()))){
@@ -238,7 +242,7 @@ public class Grafo {
         //System.out.println(CanaleraActual.getCIafiliado());
         for (int i = 1; i < tope; i++) {
             if(!vis[i] && matAdy[pos][i].isExiste()){
-                if(this.vertices[pos].getDato() instanceof NodoRed){
+                if(this.vertices[pos].getTipo() == "NodoRed"){
                     vis[pos] = true;
                 }
                 ejecutaDFSRec(i, vis);
@@ -247,15 +251,6 @@ public class Grafo {
     }
     ///////////////////////////////
     // DFS MODIFICADO END
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     ///////////////////////////////
