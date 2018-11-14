@@ -176,6 +176,31 @@ public class Grafo {
     }
     
     
+    public void deshabilitarNogoGrafo(NodoGrafo ver) {
+        int pos = posVertice(ver);
+        
+        for (int i = 0; i < tope; i++) {
+            matAdy[pos][i].setExiste(false);
+            matAdy[i][pos].setExiste(false);
+        }
+    }
+    
+    public boolean estadoNodo(NodoGrafo nodoActual) {
+        boolean retorno = false;
+        int pos = posVertice(nodoActual);
+
+        for (int i = 0; i < tope; i++) {
+            if(matAdy[pos][i].isExiste() == true && matAdy[i][pos].isExiste() == true){
+                return true;
+            }else{
+                retorno = false;
+            }
+        }
+        return retorno;
+    }
+                
+    
+    
 
     // Pre: existeVertice(ver)
     public void borrarVertice(NodoGrafo ver) {
@@ -196,6 +221,9 @@ public class Grafo {
         matAdy[posOrigen][posDestino].setExiste(false);
         matAdy[posDestino][posOrigen].setExiste(false);
     }
+    
+    
+    
     
     
     
@@ -428,5 +456,18 @@ public class Grafo {
             }
         }
     }
+
+    public NodoGrafo getNodoServidor() {
+        
+        for(int i = 0; 0 < vertices.length; i++){
+            if("Servidor".equals(vertices[i].getTipo())){
+                return vertices[i];
+            }
+        }
+        
+        return null;
+    }
+
+    
 }
 

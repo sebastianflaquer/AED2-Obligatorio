@@ -13,7 +13,7 @@ import uy.ort.ob201802.Grafo.NodoGrafo;
 public class Canalera extends NodoGrafo{
     
     private String chipid;
-    private String CIafiliado;
+    private String cIafiliado;
     
     ////////////////////////////////
     //CONSTRUCTOR
@@ -21,13 +21,13 @@ public class Canalera extends NodoGrafo{
     public Canalera() {
         super();
         this.chipid = null;
-        this.CIafiliado = null;
+        this.cIafiliado = null;
     }
     
     public Canalera(String chipid, String CIafiliado, double coordX, double coordY) {
         super("Canalera", coordX, coordY);
         this.chipid = chipid;
-        this.CIafiliado = CIafiliado;
+        this.cIafiliado = CIafiliado;
     }
     
     ////////////////////////////////
@@ -42,11 +42,11 @@ public class Canalera extends NodoGrafo{
     }
 
     public String getCIafiliado() {
-        return CIafiliado;
+        return cIafiliado;
     }
 
     public void setCIafiliado(String CIafiliado) {
-        this.CIafiliado = CIafiliado;
+        this.cIafiliado = CIafiliado;
     }
     
 }

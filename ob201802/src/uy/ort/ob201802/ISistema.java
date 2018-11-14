@@ -31,4 +31,6 @@ public interface ISistema {
 	Retorno nodosCriticos();
 	
 	Retorno dibujarMapa();
+        
+        Retorno deshabilitarNodo(double coordX, double coordY);
 }

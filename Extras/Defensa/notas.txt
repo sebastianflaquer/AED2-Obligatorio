@@ -1,0 +1,76 @@
+
+Resultado de el Test:
+
+/*******************************/
+Tests passed: 100%
+All 24 tests passed.
+
+
+/*******************************/
+No realice ninguna correccion de errores.
+
+
+
+
+
+
+/*******************************/
+Codigo Nuevo:
+
+
+
+/* EN: Sistema.java */
+@Override
+public Retorno deshabilitarNodo(double coordX, double coordY){
+	
+	NodoGrafo nodoActual = this.vGrafo.existeVerticeCordenadas(coordX, coordY);
+	
+	//SI YA EXISTE UN PUNTO EN LAS CORDENADAS
+	if(nodoActual!=null){
+		//SI EL NODO ES DE TIPO NODO RED
+		if("NodoRed".equals(nodoActual.getTipo())){
+			
+			//boolean deshabilitado = vGrafo.estadoNodo(nodoActual);
+			boolean estado = vGrafo.estadoNodo(nodoActual);
+			
+			if(estado != false){                    
+				vGrafo.deshabilitarNogoGrafo(nodoActual);
+				return new Retorno(Resultado.OK);
+			}else{
+				return new Retorno(Resultado.ERROR_3);
+			}
+		}else{
+			return new Retorno(Resultado.ERROR_2);
+		}
+	}else{
+		return new Retorno(Resultado.ERROR_1);
+	}
+}
+
+/* EN: Grafo.java */
+public void deshabilitarNogoGrafo(NodoGrafo ver) {
+	int pos = posVertice(ver);
+	
+	for (int i = 0; i < tope; i++) {
+		matAdy[pos][i].setExiste(false);
+		matAdy[i][pos].setExiste(false);
+	}
+}
+
+public boolean estadoNodo(NodoGrafo nodoActual) {
+	boolean retorno = false;
+	int pos = posVertice(nodoActual);
+
+	for (int i = 0; i < tope; i++) {
+		if(matAdy[pos][i].isExiste() == true && matAdy[i][pos].isExiste() == true){
+			return true;
+		}else{
+			retorno = false;
+		}
+	}
+	return retorno;
+}
+
+
+
+
